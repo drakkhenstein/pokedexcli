@@ -43,8 +43,8 @@ def main():
 
         #while pause is False:
             #updatable.update(dt)
-            #for entity in drawable:
-                #entity.draw(screen)
+        for entity in drawable:
+            entity.draw(screen)
 
         for enemy in enemies:
             if enemy.collision(player):
