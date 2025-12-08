@@ -9,17 +9,17 @@ class Enemy(CircleShape):
         
         
     def draw(self, screen):
-        pygame.draw.circle(screen, "white", self.position, self.radius, 2)
+        pygame.draw.circle(screen, "black", self.position, self.radius, 2)
 
     def update(self, dt):
         self.position += self.velocity * dt
         
     
-    #def split(self):
-        #self.kill()
+    def split(self):
+        self.kill()
 
-        #if self.radius <= ASTEROID_MIN_RADIUS:
-            #return
+        if self.radius <= ENEMY_MAX_RADIUS:
+            return
 
         #random_angle = random.uniform(20, 50)
 

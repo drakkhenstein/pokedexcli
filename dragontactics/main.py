@@ -9,6 +9,7 @@ from battlefield import *
 def main():
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
     clock = pygame.time.Clock()
     dt = 0
     #player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
@@ -31,15 +32,27 @@ def main():
     Player.containers = (updatable, drawable)
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
 
+    pause = False
+
 
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
-        screen.fill("black")
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    if pause:
+                        pause = False
+                    else:
+                        pause = True 
+        screen.fill("green")
+        screen.blit((surface, True, 'black'), (10,10))
+        #((f'dist: {distance} m', True, 'black'), (10, 10))
         #pause = False
 
-        updatable.update(dt)
+        if not pause:
+            updatable.update(dt)
+            
 
         #while pause is False:
             #updatable.update(dt)
@@ -48,7 +61,36 @@ def main():
 
         for enemy in enemies:
             if enemy.collision(player):
-                screen.fill("black")
+                #write("Game Paused", 500, 150)
+                #write("Press 'space bar' to continue", 500, 250)
+                #pygame.display.update()
+                #pause()
+                enemy.kill()
+                pause = True
+
+                # Draw pause screen
+                if pause:
+                    pygame.draw.rect(surface, (128, 128, 128, 150), [0, 0, SCREEN_WIDTH, SCREEN_HEIGHT])
+                    pygame.draw.rect(surface, 'blue', [200, 150, 600, 50], 0, 10)
+                    reset = pygame.draw.rect(surface, 'white', [200, 220, 280, 50], 0, 10)
+                    save = pygame.draw.rect(surface, 'white', [520, 220, 280, 50], 0, 10)
+                    screen.blit(surface, (0,0))
+                #if pause:
+                    
+                #font = pygame.font.Font(None, 36)
+                #text = font.render("Game Over!", True, "black")
+                #text_rect = text.get_rect(center=(SCREEN_WIDTH / 2, 175))
+                #surface.blit(text, text_rect)
+                
+
+                #if event.type == pygame.KEYDOWN:
+                    #if event.key == pygame.K_SPACE and not pause:
+                        #if pause:
+                            #pause = False
+                        #else:
+                            #pause = True
+                #screen.fill("black")
+
                 #pause = True
                 #dt = clock.tick(0)  # seconds
                 #updatable.update(dt + 1)  # freeze the game
