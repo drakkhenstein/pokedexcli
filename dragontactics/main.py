@@ -6,12 +6,15 @@ from circleshape import *
 from enemy import *
 from battlefield import *
 
+
+
 def main():
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
     clock = pygame.time.Clock()
     dt = 0
+    font = pygame.font.Font('freesansbold.ttf', 36)
     #player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
@@ -34,6 +37,16 @@ def main():
 
     pause = False
 
+    def draw_pause():
+        pygame.draw.rect(surface, (128, 128, 128, 150), [0, 0, SCREEN_WIDTH, SCREEN_HEIGHT])
+        pygame.draw.rect(surface, 'blue', [200, 150, 600, 50], 0, 10)
+        reset = pygame.draw.rect(surface, 'white', [200, 220, 280, 50], 0, 10)
+        save = pygame.draw.rect(surface, 'white', [520, 220, 280, 50], 0, 10)
+        surface.blit(font.render('Game Paused: Space to Resume', True, "black"), (220, 160))
+        surface.blit(font.render('Reset Game', True, "black"), (220, 230))
+        surface.blit(font.render('Save Game', True, "black"), (540, 230))
+        screen.blit(surface, (0,0))
+        return reset, save
 
     while True:
         for event in pygame.event.get():
@@ -46,9 +59,12 @@ def main():
                     else:
                         pause = True 
         screen.fill("green")
-        screen.blit((surface, True, 'black'), (10,10))
+        #screen.blit(surface, (10, 10))
         #((f'dist: {distance} m', True, 'black'), (10, 10))
         #pause = False
+        if pause:
+            restart, saves = draw_pause()
+            #pygame.display.update()
 
         if not pause:
             updatable.update(dt)
@@ -69,12 +85,12 @@ def main():
                 pause = True
 
                 # Draw pause screen
-                if pause:
-                    pygame.draw.rect(surface, (128, 128, 128, 150), [0, 0, SCREEN_WIDTH, SCREEN_HEIGHT])
-                    pygame.draw.rect(surface, 'blue', [200, 150, 600, 50], 0, 10)
-                    reset = pygame.draw.rect(surface, 'white', [200, 220, 280, 50], 0, 10)
-                    save = pygame.draw.rect(surface, 'white', [520, 220, 280, 50], 0, 10)
-                    screen.blit(surface, (0,0))
+                #if pause:
+                    #pygame.draw.rect(surface, (128, 128, 128, 150), [0, 0, SCREEN_WIDTH, SCREEN_HEIGHT])
+                    #pygame.draw.rect(surface, 'blue', [200, 150, 600, 50], 0, 10)
+                    #reset = pygame.draw.rect(surface, 'white', [200, 220, 280, 50], 0, 10)
+                    #save = pygame.draw.rect(surface, 'white', [520, 220, 280, 50], 0, 10)
+                    #screen.blit(surface, (0,0))
                 #if pause:
                     
                 #font = pygame.font.Font(None, 36)
