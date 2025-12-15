@@ -6,11 +6,10 @@ from circleshape import *
 from enemy import *
 from battlefield import *
 
-
-
 def main():
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    screen2 = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
     clock = pygame.time.Clock()
     dt = 0
@@ -84,6 +83,7 @@ def main():
                 enemy.kill()
                 pause = True
 
+                
                 # Draw pause screen
                 #if pause:
                     #pygame.draw.rect(surface, (128, 128, 128, 150), [0, 0, SCREEN_WIDTH, SCREEN_HEIGHT])
