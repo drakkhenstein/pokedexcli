@@ -5,31 +5,47 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"github.com/drakkhenstein/pokedexcli/internal/pokeapi"
 )
+
+func getCommands() map[string]cliCommand {
+    return map[string]cliCommand{
+        "exit": {
+            name:        "exit",
+            description: "Exit the Pokedex",
+            callback:    commandExit,
+        },
+		"help": {
+			name:        "help",
+			description: "Displays a help message",
+			callback:    commandHelp,
+		},
+		"map": {
+			name:        "map",
+			description: "Get the next page of locations",
+			callback:    commandMapf,
+		},
+		"mapb": {
+			name:        "mapb",
+			description: "Get the previous page of locations",
+			callback:    commandMapb,
+		},
+	}
+}
+
+type config struct {
+	pokeapiClient pokeapi.Client
+	nextLocationsURL *string
+	prevLocationsURL *string
+}
 
 type cliCommand struct {
 	name        string
 	description string
-	callback    func() error
+	callback    func(*config) error
 }
 
-
-func commandExit() error {
-	fmt.Println("Closing the Pokedex... Goodbye!")
-	os.Exit(0)
-	return nil
-}
-
-func commandHelp() error {
-	fmt.Println("Welcome to the Pokedex!")
-	fmt.Println("Usage:")
-	fmt.Println("")
-	fmt.Println("help: Displays a help message")
-	fmt.Println("exit: Exit the Pokedex")
-	return nil
-}
-
-func startRepl() {
+func startRepl(cfg *config) {
 	reader := bufio.NewScanner(os.Stdin)
 	for {
 		fmt.Print("Pokedex > ")
@@ -41,27 +57,16 @@ func startRepl() {
 		}
 		commandName := words[0]
 		
-		var commands = map[string]cliCommand{
-    		"exit": {
-        		name:        "exit",
-        		description: "Exit the Pokedex",
-        		callback:    commandExit,
-    		},
-			"help": {
-				name:        "help",
-				description: "Displays a help message",
-				callback:    commandHelp,
-			},
-		}
-		
-		command, exists := commands[commandName] 
-		if !exists {
+		command, exists := getCommands()[commandName] 
+		if exists {
+			err := command.callback(cfg)
+			if err != nil {
+				fmt.Println(err)
+			}
+			continue
+		} else {
 			fmt.Println("Unknown command")
 			continue
-		}
-		err := command.callback()
-		if err != nil {
-			fmt.Println(err)
 		}
 	}
 }
@@ -75,4 +80,5 @@ func cleanInput(text string) []string {
 	words := strings.Fields(trimmed)
 	return words
 }
+
 
